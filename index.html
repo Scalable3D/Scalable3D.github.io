@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <META NAME="robots" CONTENT="noindex,nofollow">
+    <title>EscherNet</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--load model viewer google-->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            margin: 10px;
+            text-align: center;
+        }
+        .title-column {
+            width: 100px; /* Set the width you want for the title column */
+        }
+        td {
+            padding: 10px;
+            text-align: center; /* Horizontal alignment */
+            vertical-align: middle; /* Vertical alignment */
+        }
+        img {
+            width: 150px; /* Set the width you want */
+            height: 150px; /* Set the height you want */
+        }
+        /*.title {*/
+        /*    text-align: left; !* Align titles to the left *!*/
+        /*}*/
+        video {
+            width: 150px; /* Set the width you want */
+            height: 150px; /* Set the height you want */
+        }
+        .name {
+            text-align: center; /* Center the names */
+            max-width: 150px; /* Set the maximum width to match image width */
+            margin: 0 auto; /* Center the name within the width */
+        }
+
+        .floating-controls {
+            position: fixed;
+            top: 10%; /* Adjust vertical position */
+            left: 20px; /* Adjust horizontal position */
+            /*transform: translateY(-50%); !* Center vertically *!*/
+            background-color: rgba(255, 255, 255, 0.8); /* Background color for controls */
+            padding: 10px;
+            border-radius: 5px;
+            /* Other styles for the floating controls */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            display: flex;
+            /*justify-content: center;*/
+            /*align-items: center;*/
+        }
+
+        model-viewer {
+            width: 150px;
+            height: 150px;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            /*.floating-controls {*/
+            /*    display: none; !* Hide controls on smaller screens *!*/
+            /*}*/
+            th, td {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-controls">
+        <!-- Video controls (play, pause, volume, etc.) -->
+        <!-- Example: -->
+        <button onclick="startAllVideos()">Play</button>
+        <button onclick="pauseAllVideos()">Pause</button>
+        <br>
+        <button onclick="changeSpeed(2.0)">2.0x</button>
+        <button onclick="changeSpeed(1)">1x</button>
+        <button onclick="changeSpeed(0.5)">0.5x</button>
+    </div>
+<!--    make main title larger-->
+    <h1>EscherNet: A Generative Model for Scalable View Synthesis</h1>
+
+    <h2>Text2Image Novel View Synthesis with MVDream / SDXL</h2>
+    <h3>MVDream [4 Views]</h3>
+    <table id="table_T2I_T4">
+        <tr>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/A bald eagle carved out of wood/sample_0/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> A bald eagle carved out of wood</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/Zombie bust, terror, 123dsculpt, bust, zombie/sample_0/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> Zombie bust, terror, 123dsculpt, bust, zombie</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/Isometric Slowpoke Themed Bedroom, fanart, pokemon, bedroom, assignment, isometric, pokemon3d, isometric-room, room-low-poly, 3d asset/sample_0/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> Isometric Slowpoke Themed Bedroom, bedroom, ... 3d asset</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/Medieval House, grass, medieval, vines, farm, middle-age, medieval-house, stone, house, home, wood, medieval-decor, 3d asset/sample_1/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> Medieval House, grass, medieval, ... 3d asset</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/a DSLR photo of a ghost eating a hamburger/sample_0/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a DSLR photo of a ghost eating a hamburger (sample 1)</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/an astronaut riding a horse/sample_1/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> an astronaut riding a horse</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/A bull dog wearing a black pirate hat/sample_2/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> A bull dog wearing a black pirate hat</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/MVDream/logs_gif_T4M100_98k/a DSLR photo of a ghost eating a hamburger/sample_2/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a DSLR photo of a ghost eating a hamburger (sample 2)</p>
+            </td>
+
+        </tr>
+    </table>
+
+    <h3>SDXL/Web Pictures [1 View]</h3>
+    <table id="table_T2I_T1">
+        <tr>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/a+bear+dancing+ballet_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a bear dancing ballet</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/veg_robot/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a robot made of vegetables, 4K</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/a+covered+wagon_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a covered wagon</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/a+mug+of+hot+chocolate+with+whipped+cream+and+marshmallows_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a mug of hot chocolate with whipped cream</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/a+plush+dragon+toy_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">a plush dragon toy</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/donut_xmas/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">donut xmas</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/frog wearing a sweater, high quality, 4K_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">frog wearing a sweater, high quality, 4K</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./Text23D/T1M100/rabbit_rgba/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">rabbit</p>
+            </td>
+
+        </tr>
+    </table>
+
+
+    <h2>Real World Novel View Synthesis [5 Views]</h2>
+    <table id="table_Real">
+        <tr>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/real_fruits/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">real fruits</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/forks_and_plates/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> forks and plates</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/emergency_stop_button/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> emergency stop button</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/drone/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">drone</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/kitchen/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">kitchen</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/ps_controller/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name"> ps controller</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/shapes_pile/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">shape piles</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/highlighter_and_corrector/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">highlighter and corrector</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/tools/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">tools</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/bowling/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">bowling</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/iron/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">iron</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/lego_brain/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">lego brain</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/climbing_shoe/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">climbing shoe</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/cup_and_3_cubes/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">cup and 3 cubes</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/fake_fruits/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">fake fruits</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./RealWorld/N5M100/biscuit_box/output.mp4" type="video/mp4">
+                    </video>
+                <p class="name">biscuit box</p>
+            </td>
+        </tr>
+    </table>
+
+
+    <h2>Google Scanned Dataset (GSO)</h2>
+
+    <table id="table_GSO_NVS">
+        <tr>
+            <td class="title-column">Ours 1 View</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/alarm/output.mp4" type="video/mp4">
+                    </video>
+                <p>alarm</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/turtle/output.mp4" type="video/mp4">
+                    </video>
+                <p>turtle</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/backpack/output.mp4" type="video/mp4">
+                    </video>
+                <p>backpack</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/sofa/output.mp4" type="video/mp4">
+                    </video>
+                <p>sofa</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/lion/output.mp4" type="video/mp4">
+                    </video>
+                <p>lion</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/elephant/output.mp4" type="video/mp4">
+                    </video>
+                <p>elephant</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/sorter/output.mp4" type="video/mp4">
+                    </video>
+                <p>sorter</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/shoe1/output.mp4" type="video/mp4">
+                    </video>
+                <p>shoe1</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T1M100_98k_direct/school_bus2/output.mp4" type="video/mp4">
+                    </video>
+                <p>school_bus2</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Zero123-XL</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/alarm/output.mp4" type="video/mp4">
+                    </video>
+                <p>alarm</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/turtle/output.mp4" type="video/mp4">
+                    </video>
+                <p>turtle</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/backpack/output.mp4" type="video/mp4">
+                    </video>
+                <p>backpack</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/sofa/output.mp4" type="video/mp4">
+                    </video>
+                <p>sofa</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/lion/output.mp4" type="video/mp4">
+                    </video>
+                <p>lion</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/elephant/output.mp4" type="video/mp4">
+                    </video>
+                <p>elephant</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/sorter/output.mp4" type="video/mp4">
+                    </video>
+                <p>sorter</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/shoe1/output.mp4" type="video/mp4">
+                    </video>
+                <p>shoe1</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/Zero123/output_GSO-xl/school_bus2/output.mp4" type="video/mp4">
+                    </video>
+                <p>school_bus2</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Ours 2 View</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/alarm/output.mp4" type="video/mp4">
+                    </video>
+                <p>alarm</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/turtle/output.mp4" type="video/mp4">
+                    </video>
+                <p>turtle</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/backpack/output.mp4" type="video/mp4">
+                    </video>
+                <p>backpack</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/sofa/output.mp4" type="video/mp4">
+                    </video>
+                <p>sofa</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/lion/output.mp4" type="video/mp4">
+                    </video>
+                <p>lion</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/elephant/output.mp4" type="video/mp4">
+                    </video>
+                <p>elephant</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/sorter/output.mp4" type="video/mp4">
+                    </video>
+                <p>sorter</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/shoe1/output.mp4" type="video/mp4">
+                    </video>
+                <p>shoe1</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T2M100_98k_direct/school_bus2/output.mp4" type="video/mp4">
+                    </video>
+                <p>school_bus2</p>
+            </td>
+        </tr>
+        <tr>
+                <td class="title-column">Ours 5 View</td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/alarm/output.mp4" type="video/mp4">
+                    </video>
+                    <p>alarm</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/turtle/output.mp4" type="video/mp4">
+                    </video>
+                    <p>turtle</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/backpack/output.mp4" type="video/mp4">
+                    </video>
+                    <p>backpack</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/sofa/output.mp4" type="video/mp4">
+                    </video>
+                    <p>sofa</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/lion/output.mp4" type="video/mp4">
+                    </video>
+                    <p>lion</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/elephant/output.mp4" type="video/mp4">
+                    </video>
+                    <p>elephant</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/sorter/output.mp4" type="video/mp4">
+                    </video>
+                    <p>sorter</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/shoe1/output.mp4" type="video/mp4">
+                    </video>
+                    <p>shoe1</p>
+                </td>
+                <td>
+                    <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./GSO100/98k/logs_GSO100_T5M100_98k_direct/school_bus2/output.mp4" type="video/mp4">
+                    </video>
+                    <p>school_bus2</p>
+                </td>
+            </tr>
+    </table>
+
+
+
+<!--NeRF-->
+<h2>NeRF Synthetic Dataset</h2>
+    <h3> Given
+        <Select id="full_label-selector" class="partial_label-selector" style="padding: 2px; background:#f0f0f0; border:none; font-family: 'Noto Sans', sans-serif; font-size:20px;" >
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="20">20</option>
+            <option value="100">100</option>
+        </Select>
+        Input View.
+    </h3>
+
+    <div class="full_label 1">
+        <div>
+    <table id="table_NeRF_T1">
+    <h3>1 Input View</h3>
+        <tr>
+            <td class="title-column">Ours</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N1M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Instant NGP</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N1M20_random/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Gaussian Splatting</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N1M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+    </table>
+            </div>
+    </div>
+
+    <div class="full_label 2" style="display:none">
+        <div>
+    <table id="table_NeRF_T2">
+    <h3>2 Input View</h3>
+        <tr>
+            <td class="title-column">Ours</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N2M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Instant NGP</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N2M20_random/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Gaussian Splatting</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N2M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+    </table>
+        </div>
+    </div>
+
+    <div class="full_label 5" style="display:none">
+        <div>
+    <h3>5 Input View</h3>
+    <table id="table_NeRF_T5">
+        <tr>
+            <td class="title-column">Ours</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N5M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Instant NGP</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N5M20_random/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Gaussian Splatting</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N5M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+    </table>
+        </div>
+    </div>
+
+    <div class="full_label 20" style="display:none">
+        <div>
+    <h3>20 Input View</h3>
+    <table id="table_NeRF_T20">
+        <tr>
+            <td class="title-column">Ours</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N20M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Instant NGP</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N20M20_random/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Gaussian Splatting</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N20M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+    </table>
+        </div>
+    </div>
+
+    <div class="full_label 100" style="display:none">
+        <div>
+    <h3>All 100 Input View</h3>
+    <table id="table_NeRF_T100">
+        <tr>
+            <td class="title-column">Ours</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/EscherNet_4DoF/logs_nerf_N100M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Instant NGP</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/InstantNGP/INGP_train_N100M20_random/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">Gaussian Splatting</td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/chair/output.mp4" type="video/mp4">
+                    </video>
+                <p>chair</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/drums/output.mp4" type="video/mp4">
+                    </video>
+                <p>drums</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/ficus/output.mp4" type="video/mp4">
+                    </video>
+                <p>ficus</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/hotdog/output.mp4" type="video/mp4">
+                    </video>
+                <p>hotdog</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/lego/output.mp4" type="video/mp4">
+                    </video>
+                <p>lego</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/materials/output.mp4" type="video/mp4">
+                    </video>
+                <p>materials</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/mic/output.mp4" type="video/mp4">
+                    </video>
+                <p>mic</p>
+            </td>
+            <td>
+                <video class="videoGroup"  autoplay controls loop muted preload="metadata">
+                        <source src="./NeRF_synthetic/3dgs/GS_NeRF_N100M200/ship/output.mp4" type="video/mp4">
+                    </video>
+                <p>ship</p>
+            </td>
+        </tr>
+    </table>
+        </div>
+    </div>
+
+    <h2>3D Mesh on GSO</h2>
+    <table>
+        <tr>
+            <th>Object</th>
+            <th>One2345-XL</th>
+            <th>DreamGaussian-XL</th>
+            <th>SyncDreamer</th>
+            <th>NeuS 3</th>
+            <th>NeuS 5</th>
+            <th>Ours 1</th>
+            <th>Ours 2</th>
+            <th>Ours 5</th>
+            <th>GT</th>
+        </tr>
+        <tr>
+            <td class="title-column">alarm</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/alarm.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">turtle</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/turtle.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">sorter</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/sorter.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">sofa</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/sofa.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">school_bus2</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/school_bus2.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">bell</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/bell.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">elephant</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/elephant.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">shoe1</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/shoe1.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">grandfather</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/grandfather.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+        <tr>
+            <td class="title-column">mario</td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/One2345-XL/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/DreamGaussian-XL/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/SyncDreamer/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T3/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/NeuS_T5/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T1/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T2/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/Ours_T5/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+            <td>
+                <model-viewer orientation="0deg -90deg 0deg" src="./GSO3D/glbs/GT/mario.glb" camera-controls shadow-intensity="1" exposure="1" auto-rotate> </model-viewer>
+            </td>
+        </tr>
+    </table>
+
+
+    <script>
+        let videos = document.querySelectorAll('video');
+        let currentSpeed = 0.5; // Initial speed
+        videos.forEach(video => {
+                video.playbackRate = currentSpeed;
+            });
+
+        function changeSpeed(speed) {
+            videos.forEach(video => {
+                video.playbackRate = speed*0.5;
+            });
+            currentSpeed = speed*0.5;
+        }
+
+        function pauseAllVideos() {
+            videos.forEach(video => {
+                video.pause();
+            });
+        }
+
+        function startAllVideos() {
+            videos.forEach(video => {
+                video.play();
+            });
+        }
+
+        // Function to synchronize videos
+        function syncVideos() {
+            let maxDuration = 0;
+            videos.forEach(video => {
+                if (video.duration > maxDuration) {
+                    maxDuration = video.duration;
+                }
+            });
+
+            videos.forEach(video => {
+                video.currentTime = maxDuration - video.duration;
+            });
+        }
+
+        // Call syncVideos when all videos are loaded
+        let loadedVideos = 0;
+        videos.forEach(video => {
+            video.addEventListener('loadeddata', () => {
+                loadedVideos++;
+                if (loadedVideos === videos.length) {
+                    syncVideos();
+                }
+            });
+        });
+
+    </script>
+
+    <script>
+        const tables = document.querySelectorAll('table');
+
+        // Sync play and pause actions for all videos within the same table
+        videos.forEach(video => {
+            video.addEventListener('play', function() {
+                const currentTime = this.currentTime;
+                videos.forEach(v => {
+                    if (v !== this) {
+                        v.currentTime = currentTime;
+                        v.play();
+                    }
+                });
+            });
+
+            video.addEventListener('pause', function() {
+                const isPaused = this.paused;
+                if (isPaused) {
+                    videos.forEach(v => {
+                        if (v !== this) {
+                            v.pause();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="vis.js"></script>
+
+</body>
+</html>
+
